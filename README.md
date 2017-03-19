@@ -1,2 +1,3 @@
 # ymat
-ymat is Matrix Vector Library(予定)
+
+This is Matrix Vector Library(予定)
