@@ -7,6 +7,7 @@
 // ---------------------------------------------------
 
 #include <iostream>
+#include <cassert>
 #include <cmath>
 
 
@@ -80,10 +81,11 @@ namespace ymat {
   // Operators
   //
   
-  /*template< typename T >
-  T& TVector<T>::operator [](std::size_t) {
-    return 
-  }*/
+  template< typename T >
+  T& TVector<T>::operator [](std::size_t n) {
+    assert(n >= 0 && n <= 3);
+    return *(ptr() + n);
+  }
   
   template< typename T >
   inline TVector<T> TVector<T>::operator =(const TVector<T>& rhs) {
