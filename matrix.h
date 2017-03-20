@@ -39,6 +39,9 @@ namespace ymat {
           T* ptr();
     const T* ptr() const;
     
+    // make identity matrix
+    void identity();
+    
     // -----------------------------------------------------
     // Operators
     
@@ -48,11 +51,7 @@ namespace ymat {
   
   template< typename T >
   TMatrix4x4<T>::TMatrix4x4() {
-    for (std::size_t r = 0; r < crow(); r++) {
-      for (std::size_t c = 0; c < ccol(); c++) {
-        (*this)[r][c] = 0;
-      }
-    }
+    this->identity();
   }
   
   template< typename T >
@@ -99,6 +98,13 @@ namespace ymat {
   template< typename T >
   const T* TMatrix4x4<T>::ptr() const {
     return &this->m00;
+  }
+  
+  template< typename T >
+  void TMatrix4x4<T>::identity() {
+    for (std::size_t i = 0; i < crow() * ccol(); i++) {
+      this->ptr()[i] = (i % 5) ? 0 : 1;
+    }
   }
   
   //

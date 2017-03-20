@@ -7,12 +7,7 @@
 using namespace ymat;
 
 int main() {
-  TMatrix4x4<float> mat{
-    1.0f, 0.0f, 3.0f, 0.0f,
-    0.0f, 1.0f, 0.0f, 0.0f,
-    0.0f, 0.0f, 1.0f, 0.0f,
-    0.0f, 0.0f, 0.0f, 1.0f
-  };
+  TMatrix4x4<float> mat;
   
-  std::cout << mat[0][2] << std::endl;
+  std::cout << mat[1][1] << std::endl;
 }
