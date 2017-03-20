@@ -1,22 +1,18 @@
 
 #include <iostream>
 #include <vector.h>
+#include <matrix.h>
 
 
 using namespace ymat;
 
 int main() {
-  TVector<double> vec(3, 2);
-
-  std::cout << "length = " << vec.length() << std::endl;
-  std::cout << "x = " << vec.x << std::endl;
-  std::cout << "y = " << vec.y << std::endl;
-  std::cout << "z = " << vec.z << std::endl;
+  TMatrix4x4<float> mat{
+    1.0f, 0.0f, 3.0f, 0.0f,
+    0.0f, 1.0f, 0.0f, 0.0f,
+    0.0f, 0.0f, 1.0f, 0.0f,
+    0.0f, 0.0f, 0.0f, 1.0f
+  };
   
-  vec.normalize();
-  std::cout << "x = " << vec.x << std::endl;
-  std::cout << "y = " << vec.y << std::endl;
-  std::cout << "z = " << vec.z << std::endl;
-  
-  std::cout << "length = " << vec.length() << std::endl;
+  std::cout << mat[0][2] << std::endl;
 }

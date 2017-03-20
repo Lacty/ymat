@@ -45,8 +45,8 @@ namespace ymat {
     // ------------------------------------------------------
     // Operators
     
-    T& operator [](std::size_t);
-    const T& operator [](std::size_t) const;
+    T& operator [](const std::size_t);
+    const T& operator [](const std::size_t) const;
     
     TVector<T> operator =(const TVector<T>&);
     TVector<T> operator +(const TVector<T>&) const;
@@ -157,14 +157,14 @@ namespace ymat {
   //
   
   template< typename T >
-  T& TVector<T>::operator [](std::size_t n) {
-    assert(n >= 0 && n <= 3);
+  T& TVector<T>::operator [](const std::size_t n) {
+    assert(n >= 0 && n < dim());
     return *(ptr() + n);
   }
   
   template< typename T >
-  const T& TVector<T>::operator [](std::size_t n) const {
-    assert(n >= 0 && n <= 3);
+  const T& TVector<T>::operator [](const std::size_t n) const {
+    assert(n >= 0 && n < dim());
     return *(ptr() + n);
   }
   
