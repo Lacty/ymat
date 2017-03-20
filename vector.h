@@ -6,7 +6,6 @@
 // Copyright (C) Akira Yanai 2017
 // ---------------------------------------------------
 
-#include <iostream>
 #include <cassert>
 #include <cmath>
 
@@ -27,7 +26,27 @@ namespace ymat {
     TVector(const TVector<T>&);
     TVector(TVector<T>&&);
     
+    // ------------------------------------------------------
+    // Util Funcs
+    
+    static std::size_t dim();
+    
+          T* ptr();
+    const T* ptr() const;
+    
+    double     length() const;
+    double     dist(const TVector<T>&) const;
+    double     dot(const TVector<T>&) const;
+    TVector<T> cross(const TVector<T>&) const;
+    
+    TVector<T> normalize();
+    TVector<T> normalized();
+    
+    // ------------------------------------------------------
+    // Operators
+    
     T& operator [](std::size_t);
+    const T& operator [](std::size_t) const;
     
     TVector<T> operator =(const TVector<T>&);
     TVector<T> operator +(const TVector<T>&) const;
@@ -44,8 +63,6 @@ namespace ymat {
     TVector<T>& operator *=(const T);
     TVector<T>& operator /=(const TVector<T>&);
     TVector<T>& operator /=(const T);
-    
-    T* ptr();
   };
   
   //
@@ -76,6 +93,64 @@ namespace ymat {
   inline TVector<T>::TVector(TVector<T>&& src)
     : x(src.x), y(src.y), z(src.z)
     {}
+  
+  //
+  // Util Funcs
+  //
+  
+  template< typename T >
+  std::size_t TVector<T>::dim() {
+    return 3;
+  }
+  
+  template< typename T >
+  T* TVector<T>::ptr() {
+    return &this->x;
+  }
+  
+  template< typename T >
+  const T* TVector<T>::ptr() const {
+    return &this->x;
+  }
+  
+  template< typename T >
+  double TVector<T>::length() const {
+    return sqrt(this->x * this->x + this->y * this->y + this->z * this->z);
+  }
+  
+  template< typename T >
+  double TVector<T>::dist(const TVector<T>& rhs) const {
+    return (*this - rhs).length();
+  }
+  
+  template< typename T >
+  double TVector<T>::dot(const TVector<T>& rhs) const {
+    return this->x * rhs.x + this->y * rhs.y + this->z * rhs.z;
+  }
+  
+  template< typename T >
+  TVector<T> TVector<T>::cross(const TVector<T>& rhs) const {
+    return TVector<T>(this->y * rhs.z - rhs.y * this->z, this->z * rhs.x - rhs.z * this->x, this->x * rhs.y - rhs.x * this->y);
+  }
+  
+  template< typename T >
+  TVector<T> TVector<T>::normalize() {
+    double length = this->length();
+    if (length != 0) {
+      *this /= length;
+    }
+    return *this;
+  }
+
+  template< typename T >
+  TVector<T> TVector<T>::normalized() {
+    auto tmp(*this);
+    double length = this->length();
+    if (length != 0) {
+      tmp /= length;
+    }
+    return tmp;
+  }
 
   //
   // Operators
@@ -88,8 +163,16 @@ namespace ymat {
   }
   
   template< typename T >
-  inline TVector<T> TVector<T>::operator =(const TVector<T>& rhs) {
-    *this = rhs;
+  const T& TVector<T>::operator [](std::size_t n) const {
+    assert(n >= 0 && n <= 3);
+    return *(ptr() + n);
+  }
+  
+  template< typename T >
+  TVector<T> TVector<T>::operator =(const TVector<T>& rhs) {
+    this->x = rhs.x;
+    this->y = rhs.y;
+    this->z = rhs.z;
     return *this;
   }
   
@@ -182,15 +265,6 @@ namespace ymat {
     this->y /= rhs;
     this->z /= rhs;
     return *this;
-  }
-  
-  //
-  // Util Funcs
-  //
-  
-  template< typename T >
-  T* TVector<T>::ptr() {
-    return &this->x;
   }
 }
 
