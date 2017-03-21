@@ -31,6 +31,7 @@ namespace ymat {
     // ------------------------------------------------------
     // Util Funcs
     
+    // return dimension
     static std::size_t dim();
     
           T* ptr();
