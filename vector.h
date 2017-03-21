@@ -9,6 +9,8 @@
 #include <cassert>
 #include <cmath>
 
+#include "matrix.h"
+
 
 namespace ymat {
 
@@ -63,6 +65,9 @@ namespace ymat {
     TVector<T>& operator *=(const T);
     TVector<T>& operator /=(const TVector<T>&);
     TVector<T>& operator /=(const T);
+    
+    template< typename M >
+    TVector<T>& operator *=(const TMatrix4<M>&);
   };
   
   //
@@ -264,6 +269,18 @@ namespace ymat {
     this->x /= rhs;
     this->y /= rhs;
     this->z /= rhs;
+    return *this;
+  }
+  
+  template< typename T >
+  template< typename M >
+  TVector<T>& TVector<T>::operator *=(const TMatrix4<M>& rhs) {
+    for (std::size_t i = 0; i < dim(); i++) {
+      (*this)[i] = rhs[i][0] * (*this)[0]
+                 + rhs[i][1] * (*this)[1]
+                 + rhs[i][2] * (*this)[2]
+                 + rhs[i][3] * 1;
+    }
     return *this;
   }
 }
