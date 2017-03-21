@@ -19,17 +19,17 @@ namespace ymat {
   // Matrix 4x4
   // -------------------------------------------------------
   template < typename T >
-  class TMatrix4 {
+  class TMatrix {
   public:
     T m00, m01, m02, m03,
       m10, m11, m12, m13,
       m20, m21, m22, m23,
       m30, m31, m32, m33;
   
-    TMatrix4();
-    TMatrix4(const TMatrix4&);
-    TMatrix4(TMatrix4&&);
-    TMatrix4(const std::initializer_list<T>&); 
+    TMatrix();
+    TMatrix(const TMatrix&);
+    TMatrix(const TMatrix&&);
+    TMatrix(const std::initializer_list<T>&);
   
     // -----------------------------------------------------
     // Util Funcs
@@ -40,35 +40,54 @@ namespace ymat {
           T* ptr();
     const T* ptr() const;
     
+    // initialize with 0
+    void initialize();
+    
     // make identity matrix
     void identity();
+    
+    // scale x, y, z
+    template< typename U >
+    TMatrix<T>& scale(const U, const U, const U);
+    
+    // translate x, y, z
+    template< typename U >
+    TMatrix<T>& translate(const U, const U, const U);
+    
+    // rotate x, y, z
+    template< typename U >
+    TMatrix<T>& rotate(const U, const U, const U);
     
     // -----------------------------------------------------
     // Operators
     
     T* operator [](const std::size_t);
     const T* operator [](const std::size_t) const;
+    
+    TMatrix<T>& operator =(const TMatrix<T>&);
+    
+    TMatrix<T> operator *(const TMatrix<T>&) const;
   };
   
   template< typename T >
-  TMatrix4<T>::TMatrix4() {
+  TMatrix<T>::TMatrix() {
     this->identity();
   }
   
   template< typename T >
-  TMatrix4<T>::TMatrix4(const TMatrix4& rhs) {
+  TMatrix<T>::TMatrix(const TMatrix& rhs) {
     for (std::size_t i = 0; i < crow() * ccol(); i++) {
-      this->ptr()[i] = rhs.ptr()[i];
+        this->ptr()[i] = rhs.ptr()[i];
     }
   }
   
   template< typename T >
-  TMatrix4<T>::TMatrix4(TMatrix4&& rhs) {
+  TMatrix<T>::TMatrix(const TMatrix&& rhs) {
     *this = rhs;
   }
   
   template< typename T >
-  TMatrix4<T>::TMatrix4(const std::initializer_list<T>& list) {
+  TMatrix<T>::TMatrix(const std::initializer_list<T>& list) {
     assert(list.size() == crow() * ccol());
     std::size_t n = 0;
     for (auto&& x : list) {
@@ -82,30 +101,53 @@ namespace ymat {
   //
   
   template< typename T >
-  std::size_t TMatrix4<T>::crow() {
+  std::size_t TMatrix<T>::crow() {
     return 4;
   }
   
   template< typename T >
-  std::size_t TMatrix4<T>::ccol() {
+  std::size_t TMatrix<T>::ccol() {
     return 4;
   }
   
   template< typename T >
-  T* TMatrix4<T>::ptr() {
+  T* TMatrix<T>::ptr() {
     return &this->m00;
   }
   
   template< typename T >
-  const T* TMatrix4<T>::ptr() const {
+  const T* TMatrix<T>::ptr() const {
     return &this->m00;
   }
   
   template< typename T >
-  void TMatrix4<T>::identity() {
+  void TMatrix<T>::initialize() {
+    for (std::size_t i = 0; i < crow() * ccol(); i++) {
+      this->ptr()[i] = 0;
+    }
+  }
+  
+  template< typename T >
+  void TMatrix<T>::identity() {
     for (std::size_t i = 0; i < crow() * ccol(); i++) {
       this->ptr()[i] = (i % 5) ? 0 : 1;
     }
+  }
+  
+  template< typename T >
+  template< typename U >
+  TMatrix<T>& TMatrix<T>::scale(const U x, const U y, const U z) {
+    
+    return *this;
+  }
+  
+  template< typename T >
+  template< typename U >
+  TMatrix<T>& TMatrix<T>::translate(const U x, const U y, const U z) {
+    this->m03 = x;
+    this->m13 = y;
+    this->m23 = z;
+    return *this;
   }
   
   //
@@ -113,15 +155,37 @@ namespace ymat {
   //
   
   template< typename T >
-  T* TMatrix4<T>::operator[](const std::size_t n) {
+  T* TMatrix<T>::operator[](const std::size_t n) {
     assert(n >= 0 && n < crow());
     return (ptr() + n * crow());
   }
   
   template< typename T >
-  const T* TMatrix4<T>::operator[](const std::size_t n) const {
+  const T* TMatrix<T>::operator[](const std::size_t n) const {
     assert(n >= 0 && n < crow());
     return (ptr() + n * crow());
+  }
+  
+  template< typename T >
+  TMatrix<T>& TMatrix<T>::operator =(const TMatrix<T>& rhs) {
+    for (std::size_t i = 0; i < crow() * ccol(); i++) {
+        this->ptr()[i] = rhs.ptr()[i];
+    }
+    return *this;
+  }
+  
+  template< typename T >
+  TMatrix<T> TMatrix<T>::operator *(const TMatrix<T>& rhs) const {
+    TMatrix<T> tmp;
+    tmp.initialize();
+    for (std::size_t r = 0; r < crow(); r++) {
+      for (std::size_t c = 0; c < ccol(); c++) {
+        for (std::size_t c2 = 0; c2 < ccol(); c2++) {
+          tmp[r][c] += (*this)[r][c2] * rhs[c2][c];
+        }
+      }
+    }
+    return tmp;
   }
 }
 
