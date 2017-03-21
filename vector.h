@@ -10,6 +10,7 @@
 #include <cmath>
 
 #include "matrix.h"
+#include "util.h"
 
 
 namespace ymat {
@@ -70,6 +71,14 @@ namespace ymat {
     
     template< typename M >
     TVector<T>& operator *=(const TMatrix<M>&);
+    
+    friend std::ostream& operator<<(std::ostream& os, const TVector<T>& src) {
+      os << "[" << std::setw(8) << floor2(src.x, 3)
+         << "," << std::setw(8) << floor2(src.y, 3)
+         << "," << std::setw(8) << floor2(src.z, 3)
+          << "]";
+      return os;
+    }
   };
   
   //

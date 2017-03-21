@@ -6,10 +6,15 @@
 // Copyright (C) Akira Yanai 2017
 // ---------------------------------------------------
 
-#include <initializer_list>
-#include <cassert>
+#include <iostream>
+#include <iomanip>
+
 #include <cmath>
 
+#include <initializer_list>
+#include <cassert>
+
+#include "util.h"
 #include "vector.h"
 
 
@@ -74,10 +79,21 @@ namespace ymat {
     const T* operator [](const std::size_t) const;
     
     TMatrix<T>& operator =(const TMatrix<T>&);
-    
     TMatrix<T> operator *(const TMatrix<T>&) const;
-    
     TMatrix<T>& operator *=(const TMatrix<T>&);
+    
+    friend std::ostream& operator<<(std::ostream& os, const TMatrix<T>& src) {
+      for (std::size_t r = 0; r < crow(); r++) {
+        if (!r) os << "[";
+        else os << " ";
+        for (std::size_t c = 0; c < ccol(); c++) {
+          os << std::setw(8) << floor2(src[r][c], 3) << ",";
+        }
+        if (r == crow() - 1) os << "]";
+        else os << std::endl;
+      }
+      return os;
+    }
   };
   
   template< typename T >
@@ -165,12 +181,12 @@ namespace ymat {
   
   template< typename T >
   template< typename U >
-  TMatrix<T>& TMatrix<T>::rotateX(const U x) {
+  TMatrix<T>& TMatrix<T>::rotateX(const U val) {
     TMatrix<T> t{
-      1,      0,       0, 0,
-      0, cos(x), -sin(x), 0,
-      0, sin(x),  cos(x), 0,
-      0,      0,       0, 1
+      1,        0,         0, 0,
+      0, cos(val), -sin(val), 0,
+      0, sin(val),  cos(val), 0,
+      0,        0,         0, 1
     };
     *this *= t;
     return *this;
@@ -178,22 +194,36 @@ namespace ymat {
   
   template< typename T >
   template< typename U >
-  TMatrix<T>& TMatrix<T>::rotateY(const U y) {
-
+  TMatrix<T>& TMatrix<T>::rotateY(const U val) {
+    TMatrix<T> t{
+       cos(val), 0, sin(val), 0,
+              0, 1,        0, 0,
+      -sin(val), 0, cos(val), 0,
+              0, 0,        0, 1
+    };
+    *this *= t;
     return *this;
   }
   
   template< typename T >
   template< typename U >
-  TMatrix<T>& TMatrix<T>::rotateZ(const U z) {
-    
+  TMatrix<T>& TMatrix<T>::rotateZ(const U val) {
+    TMatrix<T> t{
+      cos(val), -sin(val), 0, 0,
+      sin(val),  cos(val), 0, 0,
+             0,         0, 1, 0,
+             0,         0, 0, 1
+    };
+    *this *= t;
     return *this;
   }
   
   template< typename T >
   template< typename U >
   TMatrix<T>& TMatrix<T>::rotate(const U x, const U y, const U z) {
-    
+    rotateX(x);
+    rotateY(y);
+    rotateZ(z);
     return *this;
   }
   

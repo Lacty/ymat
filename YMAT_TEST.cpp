@@ -3,23 +3,18 @@
 #include <vector.h>
 #include <matrix.h>
 
-
 using namespace ymat;
 
+
 int main() {
-  TVector<double> vec(1, 1, 1);
+  TVector<double> vec(10, 0, 0);
+  TMatrix<double> mat;
   
-  TMatrix<double> tra;
-  tra.translate(2, 2, 2);
+  mat.scale(2, 2, 2);
+  mat.rotate(0.0, 3.14159265, 0.0);
   
-  TMatrix<double> rot;
-  rot.rotateX(3.14159265365);
+  vec *= mat;
   
-  // OpenGLは左の方から
-  //      回転 ← 移動
-  vec *= rot * tra;
-  
-  std::cout << "x " << vec.x << std::endl;
-  std::cout << "y " << vec.y << std::endl;
-  std::cout << "z " << vec.z << std::endl;
+  std::cout << mat << std::endl;  
+  std::cout << vec << std::endl;
 }
