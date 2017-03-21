@@ -26,7 +26,7 @@ namespace ymat {
     TVector(const T, const T);
     TVector(const T, const T, const T);
     TVector(const TVector<T>&);
-    TVector(TVector<T>&&);
+    TVector(const TVector<T>&&);
     
     // ------------------------------------------------------
     // Util Funcs
@@ -51,7 +51,8 @@ namespace ymat {
     T& operator [](const std::size_t);
     const T& operator [](const std::size_t) const;
     
-    TVector<T> operator =(const TVector<T>&);
+    TVector<T>& operator =(const TVector<T>&);
+    
     TVector<T> operator +(const TVector<T>&) const;
     TVector<T> operator -(const TVector<T>&) const;
     TVector<T> operator -() const;
@@ -68,7 +69,7 @@ namespace ymat {
     TVector<T>& operator /=(const T);
     
     template< typename M >
-    TVector<T>& operator *=(const TMatrix4<M>&);
+    TVector<T>& operator *=(const TMatrix<M>&);
   };
   
   //
@@ -96,7 +97,7 @@ namespace ymat {
     {}
   
   template< typename T >
-  inline TVector<T>::TVector(TVector<T>&& src)
+  inline TVector<T>::TVector(const TVector<T>&& src)
     : x(src.x), y(src.y), z(src.z)
     {}
   
@@ -175,7 +176,7 @@ namespace ymat {
   }
   
   template< typename T >
-  TVector<T> TVector<T>::operator =(const TVector<T>& rhs) {
+  TVector<T>& TVector<T>::operator =(const TVector<T>& rhs) {
     this->x = rhs.x;
     this->y = rhs.y;
     this->z = rhs.z;
@@ -275,7 +276,7 @@ namespace ymat {
   
   template< typename T >
   template< typename M >
-  TVector<T>& TVector<T>::operator *=(const TMatrix4<M>& rhs) {
+  TVector<T>& TVector<T>::operator *=(const TMatrix<M>& rhs) {
     for (std::size_t i = 0; i < dim(); i++) {
       (*this)[i] = rhs[i][0] * (*this)[0]
                  + rhs[i][1] * (*this)[1]
