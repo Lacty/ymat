@@ -54,6 +54,15 @@ namespace ymat {
     template< typename U >
     TMatrix<T>& translate(const U, const U, const U);
     
+    template< typename U >
+    TMatrix<T>& rotateX(const U);
+    
+    template< typename U >
+    TMatrix<T>& rotateY(const U);
+    
+    template< typename U >
+    TMatrix<T>& rotateZ(const U);
+    
     // rotate x, y, z
     template< typename U >
     TMatrix<T>& rotate(const U, const U, const U);
@@ -67,6 +76,8 @@ namespace ymat {
     TMatrix<T>& operator =(const TMatrix<T>&);
     
     TMatrix<T> operator *(const TMatrix<T>&) const;
+    
+    TMatrix<T>& operator *=(const TMatrix<T>&);
   };
   
   template< typename T >
@@ -77,7 +88,7 @@ namespace ymat {
   template< typename T >
   TMatrix<T>::TMatrix(const TMatrix& rhs) {
     for (std::size_t i = 0; i < crow() * ccol(); i++) {
-        this->ptr()[i] = rhs.ptr()[i];
+      this->ptr()[i] = rhs.ptr()[i];
     }
   }
   
@@ -137,7 +148,9 @@ namespace ymat {
   template< typename T >
   template< typename U >
   TMatrix<T>& TMatrix<T>::scale(const U x, const U y, const U z) {
-    
+    this->m00 = x;
+    this->m11 = y;
+    this->m22 = z;
     return *this;
   }
   
@@ -147,6 +160,40 @@ namespace ymat {
     this->m03 = x;
     this->m13 = y;
     this->m23 = z;
+    return *this;
+  }
+  
+  template< typename T >
+  template< typename U >
+  TMatrix<T>& TMatrix<T>::rotateX(const U x) {
+    TMatrix<T> t{
+      1,      0,       0, 0,
+      0, cos(x), -sin(x), 0,
+      0, sin(x),  cos(x), 0,
+      0,      0,       0, 1
+    };
+    *this *= t;
+    return *this;
+  }
+  
+  template< typename T >
+  template< typename U >
+  TMatrix<T>& TMatrix<T>::rotateY(const U y) {
+
+    return *this;
+  }
+  
+  template< typename T >
+  template< typename U >
+  TMatrix<T>& TMatrix<T>::rotateZ(const U z) {
+    
+    return *this;
+  }
+  
+  template< typename T >
+  template< typename U >
+  TMatrix<T>& TMatrix<T>::rotate(const U x, const U y, const U z) {
+    
     return *this;
   }
   
@@ -169,7 +216,7 @@ namespace ymat {
   template< typename T >
   TMatrix<T>& TMatrix<T>::operator =(const TMatrix<T>& rhs) {
     for (std::size_t i = 0; i < crow() * ccol(); i++) {
-        this->ptr()[i] = rhs.ptr()[i];
+      this->ptr()[i] = rhs.ptr()[i];
     }
     return *this;
   }
@@ -186,6 +233,12 @@ namespace ymat {
       }
     }
     return tmp;
+  }
+  
+  template< typename T >
+  TMatrix<T>& TMatrix<T>::operator *=(const TMatrix<T>& rhs) {
+    (*this) = (*this) * rhs;
+    return *this;
   }
 }
 

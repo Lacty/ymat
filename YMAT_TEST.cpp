@@ -7,17 +7,19 @@
 using namespace ymat;
 
 int main() {
-  TVector<double> vec(3, 4, 2);
+  TVector<double> vec(1, 1, 1);
   
-  TMatrix<double> mat1;
-  mat1.translate(1, 1, 1);
+  TMatrix<double> tra;
+  tra.translate(2, 2, 2);
   
-  TMatrix<double> mat2;
-  mat2.translate(2, 2, 2);
+  TMatrix<double> rot;
+  rot.rotateX(3.14159265365);
   
-  vec *= mat1 * mat2;
+  // OpenGLは左の方から
+  //      回転 ← 移動
+  vec *= rot * tra;
   
-  std::cout << "x " << vec.x << std::endl; // 6
-  std::cout << "y " << vec.y << std::endl; // 7
-  std::cout << "z " << vec.z << std::endl; // 5
+  std::cout << "x " << vec.x << std::endl;
+  std::cout << "y " << vec.y << std::endl;
+  std::cout << "z " << vec.z << std::endl;
 }
