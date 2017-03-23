@@ -4,17 +4,18 @@
 #include <matrix.h>
 
 using namespace ymat;
+using Vec = TVector<double>;
+using Mat = TMatrix<double>;
 
 
 int main() {
-  TVector<double> vec(10, 0, 0);
-  TMatrix<double> mat;
+  Vec pos(1, 1, 0);
   
-  mat.scale(2, 2, 2);
-  mat.rotate(0.0, 3.14159265, 0.0);
+  Mat translate(Translation<double>(10, 0, 0));
+  // Mat rotate(Rotation<double>(0, 1, 0));
+  std::cout << translate << std::endl;
   
-  vec *= mat;
+  pos *= translate;
   
-  std::cout << mat << std::endl;  
-  std::cout << vec << std::endl;
+  std::cout << pos << std::endl;
 }

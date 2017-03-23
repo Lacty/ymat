@@ -2,9 +2,9 @@
 #ifndef YMAT_MATRIX_H
 #define YMAT_MATRIX_H
 
-// ---------------------------------------------------
+// ---------------------------------------------------------
 // Copyright (C) Akira Yanai 2017
-// ---------------------------------------------------
+// ---------------------------------------------------------
 
 #include <iostream>
 #include <iomanip>
@@ -20,9 +20,9 @@
 
 namespace ymat {
   
-  // -------------------------------------------------------
+  // -------------------------------------------------------------
   // Matrix 4x4
-  // -------------------------------------------------------
+  // -------------------------------------------------------------
   template < typename T >
   class TMatrix {
   public:
@@ -80,6 +80,7 @@ namespace ymat {
     
     TMatrix<T>& operator =(const TMatrix<T>&);
     TMatrix<T> operator *(const TMatrix<T>&) const;
+    TMatrix<T> operator *(const TMatrix<T>&&) const;
     TMatrix<T>& operator *=(const TMatrix<T>&);
     
     friend std::ostream& operator<<(std::ostream& os, const TMatrix<T>& src) {
@@ -95,6 +96,40 @@ namespace ymat {
       return os;
     }
   };
+  
+  // -------------------------------------------------------------
+  // Translation
+  // -------------------------------------------------------------
+  template< typename T >
+  TMatrix<T> Translation(const T x, const T y, const T z) {
+    TMatrix<T> mat;
+    mat.translate(x, y, z);
+    return mat;
+  }
+  
+  // -------------------------------------------------------------
+  // Scaling
+  // -------------------------------------------------------------
+  template< typename T >
+  TMatrix<T> Scaling(const T x, const T y, const T z) {
+    TMatrix<T> mat;
+    mat.scale(x, y, z);
+    return mat;
+  }
+  
+  // -------------------------------------------------------------
+  // Rotation
+  // -------------------------------------------------------------
+  template< typename T >
+  TMatrix<T> Rotation(const T x, const T y, const T z) {
+    TMatrix<T> mat;
+    mat.rotate(x, y, z);
+    return mat;
+  }
+  
+  // -------------------------------------------------------------
+  // Matrix 4x4
+  // -------------------------------------------------------------
   
   template< typename T >
   TMatrix<T>::TMatrix() {
@@ -265,6 +300,20 @@ namespace ymat {
     return tmp;
   }
   
+  template< typename T >
+  TMatrix<T> TMatrix<T>::operator *(const TMatrix<T>&& rhs) const {
+    TMatrix<T> tmp;
+    tmp.initialize();
+    for (std::size_t r = 0; r < crow(); r++) {
+      for (std::size_t c = 0; c < ccol(); c++) {
+        for (std::size_t c2 = 0; c2 < ccol(); c2++) {
+          tmp[r][c] += (*this)[r][c2] * rhs[c2][c];
+        }
+      }
+    }
+    return tmp;
+  }
+
   template< typename T >
   TMatrix<T>& TMatrix<T>::operator *=(const TMatrix<T>& rhs) {
     (*this) = (*this) * rhs;
