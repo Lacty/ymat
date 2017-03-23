@@ -38,6 +38,8 @@ namespace ymat {
           T* ptr();
     const T* ptr() const;
     
+    void clear();
+    
     double     length() const;
     double     dist(const TVector<T>&) const;
     double     dot(const TVector<T>&) const;
@@ -127,6 +129,13 @@ namespace ymat {
   template< typename T >
   const T* TVector<T>::ptr() const {
     return &this->x;
+  }
+  
+  template< typename T >
+  void TVector<T>::clear() {
+    this->x = 0;
+    this->y = 0;
+    this->z = 0;
   }
   
   template< typename T >
