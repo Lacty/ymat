@@ -45,7 +45,7 @@ namespace ymat {
     double     dot(const TVector<T>&) const;
     TVector<T> cross(const TVector<T>&) const;
     
-    TVector<T> normalize();
+    TVector<T>& normalize();
     TVector<T> normalized();
     
     // ------------------------------------------------------
@@ -55,6 +55,9 @@ namespace ymat {
     const T& operator [](const std::size_t) const;
     
     TVector<T>& operator =(const TVector<T>&);
+    
+    // template< typename U >
+    // TVector<T>& operator =(const TMatrix<U>& )
     
     TVector<T> operator +(const TVector<T>&) const;
     TVector<T> operator -(const TVector<T>&) const;
@@ -159,7 +162,7 @@ namespace ymat {
   }
   
   template< typename T >
-  TVector<T> TVector<T>::normalize() {
+  TVector<T>& TVector<T>::normalize() {
     double length = this->length();
     if (length != 0) {
       *this /= length;
