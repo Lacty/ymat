@@ -1,7 +1,6 @@
 
 #include <iostream>
-#include <vector.h>
-#include <matrix.h>
+#include <ymat.h>
 
 using namespace ymat;
 using Vec = TVector<double>;
